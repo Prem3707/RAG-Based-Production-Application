@@ -1,0 +1,14 @@
+langchain==0.2.16
+langchain-openai==0.1.23
+langchain-community==0.2.16
+chromadb==0.5.5
+rank-bm25==0.2.2
+sentence-transformers==3.0.1
+ragas==0.1.18
+datasets==2.21.0
+fastapi==0.115.0
+uvicorn==0.30.6
+pypdf==4.3.1
+pydantic==2.9.0
+openai==1.45.0
+python-dotenv==1.0.1
