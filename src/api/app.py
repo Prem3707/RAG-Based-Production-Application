@@ -3,6 +3,8 @@ FastAPI REST API for the Production RAG System.
 Exposes /query endpoint and /health check.
 """
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
@@ -11,21 +13,24 @@ import time
 from src.rag_chain import RAGChain, CitationError
 
 
+# Initialized once at startup via the lifespan handler
+rag_chain = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global rag_chain
+    rag_chain = RAGChain()
+    print("[API] RAG chain loaded and ready.")
+    yield
+
+
 app = FastAPI(
     title="Production RAG API",
     description="Domain-specific Ask My Docs system with hybrid retrieval",
     version="1.0.0",
+    lifespan=lifespan,
 )
-
-# Initialize once at startup
-rag_chain = None
-
-
-@app.on_event("startup")
-async def startup_event():
-    global rag_chain
-    rag_chain = RAGChain()
-    print("[API] RAG chain loaded and ready.")
 
 
 class QueryRequest(BaseModel):
